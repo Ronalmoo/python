@@ -21,7 +21,7 @@ class Character(metaclass=ABCMeta):
         pass
 
     def __str__(self):
-        return '{} : {}'.format(self.name, self.HP)
+        return '{} : HP({}), power({})'.format(self.name, self.HP, self.power)
 
 
 class Player(Character):
@@ -53,3 +53,66 @@ class Player(Character):
         else:
             self.HP -= power
 
+
+class Monster(Character):
+    def __init__(self, name, hp, power):
+        super().__init__(name, hp, power)
+        self.attack_kind = 'None'
+
+    def attack(self, other, attack_kind):
+        if self.attack_kind == attack_kind:
+            other.get_damage(self.power, attack_kind)
+
+    def get_damage(self, power, attack_kind):
+        """
+
+        :param power:
+        :param attack_kind: 몬스터의 타입과 같으면 오히려 체력이 늘어난다.
+        :return:
+        """
+        if self.attack_kind == attack_kind:
+            self.HP += power
+        else:
+            self.HP -= power
+
+    def get_attack_kind(self):
+        return self.attack_kind
+
+
+class IceMonster(Monster):
+    def __init__(self, name='Ice monster', hp=50, power=10):
+        super().__init__(name, hp, power)
+        self.attack_kind = 'ICE'
+
+
+class FireMonster(Monster):
+    def __init__(self, name='Fire Monster', hp=50, power=20):
+        super().__init__(name, hp, power)
+        self.attack_kind = 'Fire'
+
+    def fireball(self):
+        print('fireball')
+
+
+if __name__ == "__main__":
+    player = Player('sword master', 100, 30, 'ICE')
+    monsters = list()
+    monsters.append(IceMonster())
+    monsters.append(FireMonster())
+
+    for monster in monsters:
+        print(monster)
+
+    for monster in monsters:
+        player.attack(monster, 'ICE')
+    print('after player attacked')
+
+    for monster in monsters:
+        print(monster)
+    print('')
+
+    for monster in monsters:
+        monster.attack(player, monster.get_attack_kind())
+    print('after monster attacked')
+
+    print(player)
