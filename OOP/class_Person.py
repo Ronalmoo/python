@@ -7,7 +7,7 @@ class Person:
         self.money = money
 
     def give_money(self, other, money):
-        self.money -= money
+        self.money -= money;
         other.get_money(money)
 
     def get_money(self, money):
